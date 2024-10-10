@@ -1,48 +1,49 @@
-// Import the necessary functions from Firebase SDKs
+// Импортируй необходимые функции из SDK Firebase
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
 
-// Your web app's Firebase configuration
+// Конфигурация Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDeDNc5rX1PU64qi_bIzAM3COK7axZ_1gA",
   authDomain: "githubsite-922e3.firebaseapp.com",
+  databaseURL: "https://githubsite-922e3-default-rtdb.firebaseio.com",
   projectId: "githubsite-922e3",
   storageBucket: "githubsite-922e3.appspot.com",
   messagingSenderId: "434404217253",
   appId: "1:434404217253:web:d7fbdd2c0138ae4870984c"
 };
 
-// Initialize Firebase
+// Инициализация Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase Authentication and get a reference to the service
-const auth = getAuth();
-
-// Initialize Realtime Database and get a reference to the service
+// Инициализация сервисов Firebase
+const auth = getAuth(app);
 const database = getDatabase(app);
 
-// Function to handle user registration
-function registerUser(email, password) {
+// Функция регистрации пользователя
+const registerForm = document.getElementById('registerForm');
+registerForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      // Signed in 
       const user = userCredential.user;
 
-      // Save user data to Realtime Database
+      // Запись данных пользователя в Realtime Database
       set(ref(database, 'users/' + user.uid), {
         email: user.email,
-        createdAt: new Date().toISOString()
+        registrationDate: new Date().toISOString()
       });
 
-      console.log("User registered successfully:", user);
+      // Отобразить сообщение об успешной регистрации
+      document.getElementById('message').innerText = 'Регистрация успешна!';
     })
     .catch((error) => {
-      console.error("Error during registration:", error);
+      // Отобразить ошибку в случае неудачи
+      document.getElementById('message').innerText = `Ошибка: ${error.message}`;
     });
-}
-
-// Example usage:
-const email = "example@example.com";
-const password = "securepassword";
-registerUser(email, password);
+});

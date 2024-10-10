@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
 
-// Конфигурация Firebase
+// Firebase конфигурация
 const firebaseConfig = {
   apiKey: "AIzaSyDeDNc5rX1PU64qi_bIzAM3COK7axZ_1gA",
   authDomain: "githubsite-922e3.firebaseapp.com",
@@ -39,11 +39,11 @@ registerForm.addEventListener('submit', (e) => {
         registrationDate: new Date().toISOString()
       });
 
-      // Отобразить сообщение об успешной регистрации
+      // Сообщение об успешной регистрации
       document.getElementById('message').innerText = 'Регистрация успешна!';
     })
     .catch((error) => {
-      // Отобразить ошибку в случае неудачи
+      // Отображение ошибки
       document.getElementById('message').innerText = `Ошибка: ${error.message}`;
     });
 });

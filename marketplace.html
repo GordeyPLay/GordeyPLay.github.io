@@ -64,17 +64,20 @@
                     const itemList = document.getElementById('itemList');
                     itemList.innerHTML = '';
 
-                    Object.values(inventory.ItemNames || []).forEach(item => {
+                    // Извлекаем имена предметов
+                    const itemNames = inventory.ItemNames || [];
+                    itemNames.forEach(item => {
                         const itemDiv = document.createElement('div');
                         itemDiv.className = 'item';
                         itemDiv.textContent = item; // Отображаем имя предмета
                         itemList.appendChild(itemDiv);
                     });
 
-                    // Получаем и отображаем золото (по адресу `users/{username}/gold`)
+                    // Получаем и отображаем золото (по адресу `users/{username}/gold/gold`)
                     const goldResponse = await fetch(goldURL);
-                    const gold = await goldResponse.json();
-                    document.getElementById('balance').textContent = gold || 0; // Отображаем золото
+                    const goldData = await goldResponse.json();
+                    const goldAmount = goldData && goldData.gold ? goldData.gold : 0; // Извлекаем количество золота
+                    document.getElementById('balance').textContent = goldAmount; // Отображаем золото
                 } else {
                     document.getElementById('itemList').textContent = "Инвентарь пуст.";
                 }

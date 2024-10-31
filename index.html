@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Регистрация</title>
+    <title>Вход</title>
     <style>
         * {
             box-sizing: border-box;
@@ -77,21 +77,6 @@
             background-color: #0056b3;
         }
 
-        .form-footer {
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        .form-footer a {
-            color: #007bff;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .form-footer a:hover {
-            text-decoration: underline;
-        }
-
         @media (max-width: 480px) {
             .form-container {
                 padding: 20px;
@@ -101,7 +86,7 @@
                 font-size: 20px;
             }
 
-            .form-group label, .submit-btn, .form-footer a {
+            .form-group label, .submit-btn {
                 font-size: 14px;
             }
         }
@@ -109,7 +94,7 @@
 </head>
 <body>
     <div class="form-container">
-        <h2>Регистрация</h2>
+        <h2>Вход</h2>
         <form action="#">
             <div class="form-group">
                 <label for="username">Логин</label>
@@ -121,9 +106,6 @@
             </div>
             <button type="submit" class="submit-btn">Войти</button>
         </form>
-        <div class="form-footer">
-            <p>Уже есть аккаунт? <a href="#">Войти</a></p>
-        </div>
     </div>
 </body>
 </html>

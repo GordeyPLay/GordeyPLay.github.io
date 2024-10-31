@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Инвентарь</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f7f9fc;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .balance {
+            font-size: 20px;
+            color: #007bff;
+        }
+
+        .add-skin-form {
+            margin-top: 20px;
+        }
+
+        .add-skin-form input {
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .add-skin-form button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .add-skin-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .skins-list {
+            margin-top: 20px;
+        }
+
+        .skin-item {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Инвентарь</h1>
+        <div class="balance" id="balance"></div>
+    </div>
+    <div id="userId"></div>
+    
+    <div class="add-skin-form">
+        <input type="text" id="skinName" placeholder="Название скина">
+        <button id="addSkinButton">Добавить скин</button>
+    </div>
+
+    <div class="skins-list" id="skinsList"></div>
+
+    <script>
+        const firebaseDatabaseURL = "https://YOUR_PROJECT_ID.firebaseio.com/users.json"; // Замените на URL вашей базы данных
+        const username = localStorage.getItem('username'); // Получаем логин из localStorage
+        const userDataUrl = `https://YOUR_PROJECT_ID.firebaseio.com/users/${username}.json`; // URL для данных пользователя
+
+        // Функция для получения данных пользователя
+        async function getUserData() {
+            try {
+                const response = await fetch(userDataUrl);
+                const userData = await response.json();
+                
+                if (userData) {
+                    document.getElementById("userId").innerText = `ID: ${username}`;
+                    document.getElementById("balance").innerText = `Баланс: ${userData.balance}`;
+                    loadSkins(userData.skins); // Загружаем скины
+                } else {
+                    alert("Пользователь не найден");
+                }
+            } catch (error) {
+                console.error("Ошибка при запросе:", error);
+                alert("Ошибка при запросе: " + error.message);
+            }
+        }
+
+        // Функция для загрузки скинов
+        function loadSkins(skins) {
+            const skinsList = document.getElementById("skinsList");
+            skinsList.innerHTML = ""; // Очищаем список перед добавлением
+
+            if (skins && Object.keys(skins).length > 0) {
+                for (const skin in skins) {
+                    const skinDiv = document.createElement("div");
+                    skinDiv.className = "skin-item";
+                    skinDiv.innerHTML = `<span>${skins[skin]}</span><button>Купить</button>`;
+                    skinsList.appendChild(skinDiv);
+                }
+            } else {
+                skinsList.innerHTML = "<p>У вас нет скинов.</p>";
+            }
+        }
+
+        // Добавление скина
+        document.getElementById("addSkinButton").addEventListener("click", async () => {
+            const skinName = document.getElementById("skinName").value;
+
+            if (!skinName) {
+                alert("Введите название скина");
+                return;
+            }
+
+            try {
+                // Сначала получаем текущие данные пользователя
+                const response = await fetch(userDataUrl);
+                const userData = await response.json();
+                const updatedSkins = { ...userData.skins, [skinName]: skinName }; // Обновляем скины
+
+                // Обновляем данные пользователя в базе
+                await fetch(userDataUrl, {
+                    method: "PUT",
+                    body: JSON.stringify({ ...userData, skins: updatedSkins })
+                });
+
+                document.getElementById("skinName").value = ""; // Очищаем поле ввода
+                loadSkins(updatedSkins); // Загружаем обновленный список скинов
+            } catch (error) {
+                console.error("Ошибка при добавлении скина:", error);
+                alert("Ошибка при добавлении скина: " + error.message);
+            }
+        });
+
+        // Загружаем данные пользователя при загрузке страницы
+        window.onload = getUserData;
+    </script>
+</body>
+</html>

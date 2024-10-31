@@ -76,29 +76,15 @@
         .submit-btn:hover {
             background-color: #0056b3;
         }
-
-        @media (max-width: 480px) {
-            .form-container {
-                padding: 20px;
-            }
-
-            .form-container h2 {
-                font-size: 20px;
-            }
-
-            .form-group label, .submit-btn {
-                font-size: 14px;
-            }
-        }
     </style>
 </head>
 <body>
     <div class="form-container">
         <h2>Вход</h2>
-        <form action="#">
+        <form id="loginForm">
             <div class="form-group">
-                <label for="username">Логин</label>
-                <input type="text" id="username" name="username" required placeholder="Введите логин">
+                <label for="username">Логин (Email)</label>
+                <input type="email" id="username" name="username" required placeholder="Введите логин">
             </div>
             <div class="form-group">
                 <label for="password">Пароль</label>
@@ -107,5 +93,39 @@
             <button type="submit" class="submit-btn">Войти</button>
         </form>
     </div>
+
+    <script>
+        const firebaseDatabaseURL = "https://so2project-2e2b2-default-rtdb.firebaseio.com/users.json"; // Замените на URL вашей базы данных
+
+        document.getElementById("loginForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                // Получаем данные пользователей из базы данных
+                const response = await fetch(firebaseDatabaseURL);
+                const usersData = await response.json();
+
+                // Проверяем, существует ли пользователь с таким логином
+                if (usersData && usersData[username]) {
+                    const storedPassword = usersData[username].password; // Получаем сохранённый пароль
+
+                    if (storedPassword === password) {
+                        alert("Вход успешен!");
+                        // Здесь можно перенаправить пользователя на другую страницу или выполнить другие действия
+                    } else {
+                        alert("Неверный пароль");
+                    }
+                } else {
+                    alert("Пользователь не найден");
+                }
+            } catch (error) {
+                console.error("Ошибка при запросе:", error);
+                alert("Ошибка при запросе: " + error.message);
+            }
+        });
+    </script>
 </body>
 </html>

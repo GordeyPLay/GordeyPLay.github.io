@@ -12,8 +12,7 @@ const goldURL = `${firebaseDatabaseURL}users/${username}/gold.json`; // URL дл
 // Пример доступных скинов для покупки
 const skinsForSale = [
     { name: "M4_Samurai", price: 500 },
-    { name: "Deagle_Aureate", price: 300 },
-    { name: "AK47_Sapphire", price: 700 }
+    { name: "Deagle_Aureate", price: 99999 }
 ];
 
 // Функция для получения золота пользователя

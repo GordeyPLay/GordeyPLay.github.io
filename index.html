@@ -66,7 +66,7 @@
                 // Проверяем, существует ли пользователь с данным логином и паролем
                 if (users && users[username] && users[username].password === password) {
                     localStorage.setItem('username', username); // Сохраняем логин в localStorage
-                    window.location.href = 'marketplace.html'; // Перенаправление на страницу инвентаря
+                    window.location.href = 'inventory.html; // Перенаправление на страницу инвентаря
                 } else {
                     alert("Неверный логин или пароль");
                 }

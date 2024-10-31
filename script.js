@@ -23,36 +23,22 @@ async function fetchGold() {
 }
 
 // Функция для отображения доступных скинов
-async function displaySkins() {
+async function displayInventory() {
     const itemList = document.getElementById('itemList');
     itemList.innerHTML = ''; // Очищаем список
 
-    const goldAmount = await fetchGold(); // Получаем текущее количество золота
-    document.getElementById('balance').textContent = goldAmount; // Отображаем золото
+    const itemNames = await fetchInventory(); // Получаем имена предметов из инвентаря
 
-    skinsForSale.forEach(skin => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'item';
-
-        const skinName = document.createElement('span');
-        skinName.textContent = skin.name;
-
-        const skinPrice = document.createElement('span');
-        skinPrice.textContent = `Цена: ${skin.price} золота`;
-
-        const buyButton = document.createElement('button');
-        buyButton.className = 'buy-button';
-        buyButton.textContent = 'Купить';
-        buyButton.disabled = goldAmount < skin.price; // Делаем кнопку недоступной, если недостаточно золота
-
-        // Обработчик события для покупки
-        buyButton.onclick = () => purchaseSkin(skin.name, skin.price);
-
-        itemDiv.appendChild(skinName);
-        itemDiv.appendChild(skinPrice);
-        itemDiv.appendChild(buyButton);
-        itemList.appendChild(itemDiv);
-    });
+    if (itemNames.length === 0) {
+        itemList.innerHTML = '<p>Ваш инвентарь пуст.</p>';
+    } else {
+        itemNames.forEach(itemName => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'item';
+            itemDiv.textContent = itemName;
+            itemList.appendChild(itemDiv);
+        });
+    }
 }
 
 // Функция для покупки скина
